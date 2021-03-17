@@ -73,7 +73,7 @@ def readClient(name):
                     quickRemove(name)
                     return
                 temp = temp.decode()
-                if temp == "":  #socket zakonczyl dzialanie
+                if temp == "": 
                     print("remove interrupted "+name)
                     quickRemove(name)
                     return
@@ -82,7 +82,7 @@ def readClient(name):
                     clients[name][0].sendall(bytes("3", 'utf-8'))
 
             size = int(size)
-            if size == 0:   #zostalismy poinformowani ze nastapi odlaczenie
+            if size == 0:  
                 break
             data = clients[name][0].recv(size)
         except:     #nagle odlaczenie przez blad
@@ -98,7 +98,7 @@ def readClient(name):
     print("remove "+name)
     quickRemove(name)
 
-#0 to znaczy ze wiadomosc, 1 to znaczy ze dodaj mate, 2 znaczy usun mate
+#0 = msg, 1 = add user, 2 =remove user
 
 
 def sendMsg(receiver, msg):
@@ -132,8 +132,8 @@ def Timer():
         with messages_lock:
             with clients_lock:
                 for sender, msg in messages:
-                    msgHandler(sender, msg) #inaczej moga sie zdazyc wyczyscic zanim skonczymy
-                                            # a i tak potrzebuja tych lockow
+                    msgHandler(sender, msg) 
+                                            
             messages.clear()
 
 
@@ -157,12 +157,11 @@ try:
             with clients_lock:
                 while name in clients:
                     name += '1'
-                client_sock.sendall(bytes(str(len(name))+" ", 'utf-8'))   #odeslij poprawiony nick
+                client_sock.sendall(bytes(str(len(name))+" ", 'utf-8'))   
                 client_sock.sendall(bytes(name, 'utf-8'))
 
-                addClient(name, client_sock)   # i tak musialoby zakladac locka na clients
-                                                # wiec i tak to wszystko by stalo
-                                                 # wiec nie ma po co robic tego w osobnym watku
+                addClient(name, client_sock)   
+                
                 clients.update({name: [client_sock, client_addr]})
 
                 client = threading.Thread(target=readClient, args=(name,))
