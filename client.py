@@ -32,7 +32,7 @@ class windowObj:
 
         def exit(quitGui=True):
             try:
-                client_sock.sendall(bytes("0 ", 'utf-8')) #nie mozna miec wiadomosci o dlugosci 0 wiec jak taka wyslemy to znaczy ze sie chcemy odpiac
+                client_sock.sendall(bytes("0 ", 'utf-8')) 
             except:
                 pass
             self.controller.endApplication()
@@ -94,7 +94,7 @@ class GuiPart:
         self.windowObj = windowObj(window, controller)
 
     def handleQueue(self):
-        while self.queue.qsize()>1: # musi byc i typ i msg
+        while self.queue.qsize()>1:
             try:
                 type = self.queue.get(0)
                 msg = self.queue.get(0)
@@ -149,18 +149,15 @@ class ThreadedClient:
 
     def connectionCheck(self):
         while True:
-           # print("connection check")
             with send_lock:
                 try:
                     client_sock.sendall(bytes("c", 'utf-8'))
                 except:
-                    self.gui.windowObj.exit()   #server zerwal polaczenie
+                    self.gui.windowObj.exit() 
             time.sleep(1)
 
     def receive(self):
-        #odbierz wiadomosci
-        #inserty dla listBox
-        client_sock.settimeout(4.0) #czeka dluzej wiec server na pewno zdazy
+        client_sock.settimeout(4.0) 
         while self.running:
             try:
                 type = client_sock.recv(1).decode()
@@ -168,7 +165,7 @@ class ThreadedClient:
                 self.error = "error"
                 return
 
-            if type == "3": #tylko sprawdzalismy czy jeszcze zyje
+            if type == "3": 
                 continue
 
             self.queue.put(type)
@@ -187,7 +184,6 @@ class ThreadedClient:
             self.queue.put(msg)
             print(msg)
             print(self.queue.qsize())
-        # dla kazdego mamy na kolejce type, msg
 
 
     def endApplication(self):
